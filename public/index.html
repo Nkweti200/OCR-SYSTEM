@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR Image Uploader</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+        }
+        input[type="file"] {
+            display: block;
+            margin: 20px auto;
+        }
+        #output {
+            margin-top: 20px;
+            white-space: pre-wrap;
+            border: 1px solid #ccc;
+            padding: 10px;
+            background: #f9f9f9;
+        }
+        #downloadLink {
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Upload Image for OCR</h1>
+        <form id="uploadForm">
+            <input type="file" id="imageInput" name="image" accept="image/*" required />
+            <button type="submit">Upload and Process</button>
+        </form>
+        <div id="output"></div>
+        <div id="downloadLink">
+            <a href="" id="downloadAnchor" download="ocr_result.txt">Download OCR Result</a>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('uploadForm');
+        const output = document.getElementById('output');
+        const downloadLink = document.getElementById('downloadLink');
+        const downloadAnchor = document.getElementById('downloadAnchor');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fileInput = document.getElementById('imageInput');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                output.textContent = "Please select an image file!";
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('image', file);
+
+            output.textContent = "Processing...";
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData,
+                });
+                const data = await response.json();
+                output.textContent = data.text;
+
+                // Show download link after OCR processing
+                downloadLink.style.display = 'block';
+                downloadAnchor.href = data.filePath; // Set the download link to the OCR result file
+            } catch (error) {
+                output.textContent = "Error processing the image.";
+            }
+        });
+    </script>
+</body>
+</html>
