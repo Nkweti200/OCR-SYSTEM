@@ -72,9 +72,8 @@
                 const data = await response.json();
                 output.textContent = data.text;
 
-                // Show download link after OCR processing
                 downloadLink.style.display = 'block';
-                downloadAnchor.href = data.filePath; // Set the download link to the OCR result file
+                downloadAnchor.href = data.filePath; 
             } catch (error) {
                 output.textContent = "Error processing the image.";
             }

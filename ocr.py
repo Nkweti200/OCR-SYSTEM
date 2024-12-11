@@ -4,7 +4,6 @@ import pytesseract
 from PIL import Image
 import os 
 
-# Make sure the output directory exists
 output_dir = 'processed_images'
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
